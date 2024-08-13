@@ -42,3 +42,29 @@ print(player_data)
 
 # Save data to a DataFrame
 players_df = pd.DataFrame([player_data])
+
+# Further cleaning if necessary
+# Example: Calculating additional stats such as average kills per match if match data is available
+# Assuming we have 'Total Matches' in the data
+
+players_df['Kills per Match'] = players_df['Total Kills'] / players_df['Total Matches']
+players_df['Deaths per Match'] = players_df['Total Deaths'] / players_df['Total Matches']
+
+# If match data is not available directly, consider other metrics to add depth to the analysis
+# Example: Analyzing K/D Ratio and Headshot Percentage
+team_stats = players_df.groupby('Team').agg({
+    'K/D Ratio': 'mean',
+    'Headshot %': 'mean',
+    'Total Kills': 'sum',
+    'Total Deaths': 'sum',
+}).reset_index()
+
+# Calculate overall team K/D Ratio
+team_stats['Team K/D Ratio'] = team_stats['Total Kills'] / team_stats['Total Deaths']
+
+# Further analysis could include looking at player consistency, clutch success rates, etc.
+# Export player-level data to CSV
+players_df.to_csv('csgo_player_data.csv', index=False)
+
+# Export team-level data to CSV for comparison and team analysis
+team_stats.to_csv('csgo_team_stats.csv', index=False)
